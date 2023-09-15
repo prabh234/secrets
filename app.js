@@ -33,7 +33,7 @@ app.get("/register",(req,res)=>{
 
 app.post("/register",(req,res)=>{
    
-   bcrypt.hash(req.body.password, saltRounds).then(function(hash) {
+   bcrypt.hash(req.body.password, saltCount).then(function(hash) {
 
         let newUser = new User({
             email:req.body.username,
