@@ -3,7 +3,8 @@ const express = require("express");
 const bp = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const md5 = require("md5");
+const bcrypt = require('bcrypt');
+const saltCount = 10;
 const app = express();
 
 app.use(express.static("public"));
@@ -31,22 +32,31 @@ app.get("/register",(req,res)=>{
 })
 
 app.post("/register",(req,res)=>{
-    let newUser = new User({
-        email:req.body.username,
-        password:md5(req.body.password)
+   
+   bcrypt.hash(req.body.password, saltRounds).then(function(hash) {
+
+        let newUser = new User({
+            email:req.body.username,
+            password:hash
+        });
+    
+        newUser.save().then(r=>{
+            console.log("registered successfully");
+            res.render("secrets");
+        }).catch(err=>{
+            console.log(err);
+        });
+
+
     });
-    newUser.save().then(r=>{
-        console.log("registered successfully");
-        res.render("secrets");
-    }).catch(err=>{
-        console.log(err);
-    });
-})
+   
+   
+});
 app.post("/login",(req,res)=>{
     let eml = req.body.username;
     User.findOne({email:eml}).then(user=>{
         if(user){
-            if (user.password === md5(req.body.password)) {
+            if (user.password === req.body.password) {
                 res.render("secrets")
             }
             else{
