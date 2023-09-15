@@ -7,11 +7,10 @@ const session = require('express-session');
 const passport = require('passport');
 const plm = require('passport-local-mongoose');
 const app = express();
-
 app.use(express.static("public"));
 app.set("view engine","ejs");
 app.use(bp.urlencoded({extended:true}));
-app.use(session({secret:"this is my secret.",resave:false,saveUninitialized:false}));
+app.use(session({secret:process.env.SECRET,resave:false,saveUninitialized:false}));
 app.use(passport.initialize());
 app.use(passport.session());
 
