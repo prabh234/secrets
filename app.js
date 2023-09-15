@@ -3,8 +3,9 @@ const express = require("express");
 const bp = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
-const saltCount = 10;
+const session = require('express-session');
+const passport = require('passport');
+const plm = require('passport-local-mongoose');
 const app = express();
 
 app.use(express.static("public"));
@@ -33,40 +34,9 @@ app.get("/register",(req,res)=>{
 
 app.post("/register",(req,res)=>{
    
-   bcrypt.hash(req.body.password, saltCount).then(function(hash) {
-
-        let newUser = new User({
-            email:req.body.username,
-            password:hash
-        });
-    
-        newUser.save().then(r=>{
-            console.log("registered successfully");
-            res.render("secrets");
-        }).catch(err=>{
-            console.log(err);
-        });
-
-
-    });
-   
-   
 });
 app.post("/login",(req,res)=>{
-    let eml = req.body.username;
-    User.findOne({email:eml}).then(user=>{
-        if(user){
-            if (user.password === req.body.password) {
-                res.render("secrets")
-            }
-            else{
-                console.log("incorrect password");
-            }
-        }
-        else{
-            console.log("user does not exist");
-        }
-    }).catch(e=>{console.log(e);})
+   
 })
 
 
